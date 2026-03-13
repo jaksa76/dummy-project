@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ripple Animation</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        background: #0a0a1a;
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+      }
+      .hint {
+        position: fixed;
+        top: 1rem;
+        left: 50%;
+        transform: translateX(-50%);
+        color: rgba(255,255,255,0.4);
+        font-family: system-ui, sans-serif;
+        font-size: 0.9rem;
+        pointer-events: none;
+      }
+      .back {
+        position: fixed;
+        bottom: 1rem;
+        left: 1rem;
+        color: rgba(255,255,255,0.5);
+        font-family: system-ui, sans-serif;
+        text-decoration: none;
+        font-size: 0.9rem;
+      }
+      .back:hover { color: white; }
+      canvas { display: block; }
+    </style>
+  </head>
+  <body>
+    <div class="hint">Click anywhere to create ripples</div>
+    <a class="back" href="../index.html">← Back</a>
+    <canvas id="c"></canvas>
+    <script>
+      const canvas = document.getElementById('c');
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      });
+
+      const ripples = [];
+
+      function Ripple(x, y) {
+        this.x = x;
+        this.y = y;
+        this.r = 0;
+        this.maxR = Math.max(canvas.width, canvas.height) * 0.7;
+        this.alpha = 1;
+        this.hue = Math.random() * 360;
+      }
+
+      Ripple.prototype.update = function() {
+        this.r += 4;
+        this.alpha = 1 - this.r / this.maxR;
+      };
+
+      Ripple.prototype.draw = function() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+        ctx.strokeStyle = `hsla(${this.hue}, 80%, 70%, ${this.alpha})`;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      };
+
+      canvas.addEventListener('click', (e) => {
+        ripples.push(new Ripple(e.clientX, e.clientY));
+      });
+
+      function loop() {
+        ctx.fillStyle = 'rgba(10,10,26,0.15)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        for (let i = ripples.length - 1; i >= 0; i--) {
+          ripples[i].update();
+          ripples[i].draw();
+          if (ripples[i].alpha <= 0) ripples.splice(i, 1);
+        }
+        requestAnimationFrame(loop);
+      }
+      loop();
+    </script>
+  </body>
+</html>

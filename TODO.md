@@ -1,8 +1,8 @@
-- [ ] set up vite project
-- [ ] serve a dummy html page
-- [ ] create another page with a cool animation
-- [ ] create one more page with a cool animation
-- [ ] homepage should list the animation pages
+- [x] set up vite project
+- [x] serve a dummy html page
+- [x] create another page with a cool animation
+- [x] create one more page with a cool animation
+- [x] homepage should list the animation pages
 - [ ] improve the codebase
 - [ ] create instructions on how to add pages
 - [ ] create one more page with a cool animation
